@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Prêt de Matériel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-0">Matériels dans la salle {{ salle.nom }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom du matériel</th>
+                                    <th>Responsable</th>
+                                    <th>Acheteur</th>
+                                    <th>Budget</th>
+                                    <th>État</th>
+                                    <th>Accessoires</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for materiel in materiels %}
+                                    <tr>
+                                        <td>{{ materiel.nom }}</td>
+                                        <td>{{ materiel.responsable }}</td>
+                                        <td>{{ materiel.acheteur|default_if_none:"-" }}</td>
+                                        <td>{{ materiel.budget }}</td>
+                                        <td>{{ materiel.get_etat_display }}</td>
+                                        <td>
+                                            <ul>
+                                            {% for accessoire in materiel.materielaccessoire_set.all %}
+                                                <li>{{ accessoire.accessoire.nom }}</li>
+                                            {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'modifier_materiel' materiel.id %}" class="btn btn-primary btn-sm">Modifier</a>
+                                            <a href="{% url 'supprimer_materiel' materiel.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                                            <a href="{% url 'liste_emprunts_par_materiel' materiel.id %}" class="btn btn-secondary btn-sm">Voir les emprunts</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7">Aucun matériel trouvé dans cette salle.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <a href="{% url 'liste_salles' %}" class="btn btn-outline-info">Retour à la liste des salles</a>
+                        <a href="{% url 'index' %}" class="btn btn-outline-info">Retour acceuil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

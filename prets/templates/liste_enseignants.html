@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Liste des enseignants</h2>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'ajouter_enseignant' %}" class="btn btn-outline-success mb-3">Ajouter un enseignant</a>
+                        <a href="{% url 'index' %}" class="btn btn-outline-info mb-3">Retour accueil</a>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom de l'enseignant</th>
+                                    <th>Prénom de l'enseignant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enseignant in enseignants %}
+                                    <tr>
+                                        <td> {{ enseignant.nom }} </td>
+                                        <td> {{ enseignant.prenom }} </td>
+                                        <td>
+                                            <a href="{% url 'modifier_enseignant' enseignant.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                                            <a href="{% url 'supprimer_enseignant' enseignant.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3">Aucun enseignant enregistré.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

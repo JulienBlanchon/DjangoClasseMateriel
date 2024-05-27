@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Prêt de Matériel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Liste des salles</h2>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'ajouter_salle' %}" class="btn btn-outline-success mb-3">Ajouter une salle</a>
+                        <a href="{% url 'index' %}" class="btn btn-outline-info mb-3">Retour accueil</a>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom de la salle</th>
+                                    <th>Étage</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for salle in salles %}
+                                    <tr>
+                                        <td>{{ salle.nom }}</td>
+                                        <td>{{ salle.etage }}</td>
+                                        <td>
+                                            <a href="{% url 'modifier_salle' salle.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                                            <a href="{% url 'supprimer_salle' salle.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                                            <a href="{% url 'liste_materiels_par_salle' salle.id %}" class="btn btn-link btn-sm">Voir les matériels</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3">Aucune salle enregistrée.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

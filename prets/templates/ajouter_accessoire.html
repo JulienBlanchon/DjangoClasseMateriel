@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter Enseignant</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Ajouter un accessoire</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.nom.id_for_label }}">Nom de l'accessoire:</label>
+                            {{ form.nom }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.materiel.id_for_label }}">Matériel associé:</label>
+                            {{ form.materiel }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.etat.id_for_label }}">État initial:</label>
+                            <select name="etat_{{ form.etat }}" class="form-control">
+                                                <option value="N">Neuf</option>
+                                                <option value="BE">Bon état</option>
+                                                <option value="A">Abîmé</option>
+                                                <option value="TA">Très abîmé</option>
+                                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

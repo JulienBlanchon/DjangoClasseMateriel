@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Prêt de Matériel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">Modifier le matériel</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.nom.id_for_label }}">Nom du matériel:</label>
+                                {{ form.nom }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.responsable.id_for_label }}">Responsable:</label>
+                                {{ form.responsable }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.acheteur.id_for_label }}">Acheteur (optionnel):</label>
+                                {{ form.acheteur }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.budget.id_for_label }}">Budget:</label>
+                                {{ form.budget }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.salle.id_for_label }}">Salle:</label>
+                                {{ form.salle }}
+                            </div>
+                            <div class="form-group">
+                                <label>Accessoires:</label>
+                                {% for accessoire in accessoires %}
+                                    <div class="form-check">
+                                        <input
+                                            type="checkbox"
+                                            name="accessoires"
+                                            value="{{ accessoire.id }}"
+                                            class="form-check-input"
+                                            id="accessoire-{{ accessoire.id }}"
+                                            {% if accessoire in materiel_accessoires %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="accessoire-{{ accessoire.id }}">{{ accessoire.nom }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

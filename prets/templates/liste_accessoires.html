@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Prêt de Matériel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                    <h2 class="mb-0">Liste des emprunts</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'ajouter_emprunt' %}" class="btn btn-success mb-3">Ajouter un emprunt</a>
+                    <a href="{% url 'index' %}" class="btn btn-outline-info mb-3">Retour acceuil</a>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Matériel</th>
+                                <th>Possesseur</th>
+                                <th>Date d'emprunt</th>
+                                <th>Date de retour</th>
+                                <th>Lieu</th>
+                                <th>Occasion</th>
+                                <th>Accessoires</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emprunt in emprunts %}
+                                <tr>
+                                    <td>{{ emprunt.materiel }}</td>
+                                    <td>{{ emprunt.possesseur }}</td>
+                                    <td>{{ emprunt.date_emprunt }}</td>
+                                    <td>{{ emprunt.date_retour|default_if_none:"-" }}</td>
+                                    <td>{{ emprunt.lieu }}</td>
+                                    <td>{{ emprunt.occasion }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for emprunt_accessoire in emprunt.empruntaccessoire_set.all %}
+                                                {% if emprunt_accessoire.present %}
+                                                    <li>
+                                                        {{ emprunt_accessoire.accessoire.nom }} -
+                                                        État: {{ emprunt_accessoire.get_etat_display }}
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'modifier_emprunt' emprunt.id %}" class="btn btn-primary btn-sm">Modifier</a>
+                                        <a href="{% url 'supprimer_emprunt' emprunt.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                                        <a href="{% url 'changer_possesseur' emprunt.id %}" class="btn btn-secondary btn-sm">Changer possesseur</a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="8">Aucun emprunt enregistré.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

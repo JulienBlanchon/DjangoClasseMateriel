@@ -9,7 +9,7 @@
     {% block content %}
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="mb-0">Liste des emprunts</h2>
@@ -23,9 +23,8 @@
                                     <th>Matériel</th>
                                     <th>Possesseur</th>
                                     <th>Date d'emprunt</th>
-                                    <th>Date de retour</th>
                                     <th>Lieu</th>
-                                    <th>Occasion</th>
+                                    <th>Objectif utilisation</th>
                                     <th>Accessoires</th>
                                     <th>Actions</th>
                                 </tr>
@@ -36,9 +35,8 @@
                                         <td>{{ emprunt.materiel }}</td>
                                         <td>{{ emprunt.possesseur }}</td>
                                         <td>{{ emprunt.date_emprunt }}</td>
-                                        <td>{{ emprunt.date_retour|default_if_none:"-" }}</td>
                                         <td>{{ emprunt.lieu }}</td>
-                                        <td>{{ emprunt.occasion }}</td>
+                                        <td>{{ emprunt.objectif_utilisation }}</td>
                                         <td>
                                             <ul>
                                                 {% for emprunt_accessoire in emprunt.empruntaccessoire_set.all %}
@@ -51,8 +49,8 @@
                                             </ul>
                                         </td>
                                         <td>
-                                            <a href="{% url 'modifier_emprunt' emprunt.id %}" class="btn btn-primary btn-sm">Modifier</a>
-                                            <a href="{% url 'supprimer_emprunt' emprunt.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                                            <a href="{% url 'modifier_emprunt' emprunt.id %}" class="btn btn-warning btn-sm mb-2">Modifier</a>
+                                            <a href="{% url 'supprimer_emprunt' emprunt.id %}" class="btn btn-danger btn-sm mb-2">Supprimer</a>
                                         </td>
                                     </tr>
                                 {% empty %}

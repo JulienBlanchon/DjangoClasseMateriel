@@ -173,26 +173,46 @@ def modifier_materiel(request, pk):
 
 def modifier_emprunt(request, pk):
     emprunt = get_object_or_404(Emprunt, pk=pk)
+    emprunt_accessoires = emprunt.empruntaccessoire_set.all()
+
     if request.method == 'POST':
-        form = EmpruntForm(request.POST, instance=emprunt)
-        if form.is_valid():
-            form.save()
-            EmpruntAccessoire.objects.filter(emprunt=emprunt).delete()  # Clear existing associations
+        emprunt_form = EmpruntForm(request.POST, instance=emprunt)
+
+        if emprunt_form.is_valid():
+            emprunt_form.save()
+
+            # Mettre à jour les accessoires empruntés
+            EmpruntAccessoire.objects.filter(emprunt=emprunt).delete()
             accessoire_ids = request.POST.getlist('accessoires')
-            for accessoire_id in accessoire_ids:
+            etats_accessoires = request.POST.getlist('etat_accessoire')
+            for accessoire_id, etat in zip(accessoire_ids, etats_accessoires):
                 accessoire = get_object_or_404(Accessoire, pk=accessoire_id)
                 EmpruntAccessoire.objects.create(
-                    emprunt=emprunt, accessoire=accessoire,
-                    present=True
+                    emprunt=emprunt,
+                    accessoire=accessoire,
+                    present=True,
+                    etat=etat
                 )
+
             messages.success(request, "L'emprunt a été modifié avec succès.")
             return redirect('liste_emprunts')
+
     else:
-        form = EmpruntForm(instance=emprunt)
-        accessoires = Accessoire.objects.filter(materiel=emprunt.materiel)
-        emprunt_accessoires = emprunt.empruntaccessoire_set.all()
-        return render(request, 'modifier_emprunt.html', {'form': form, 'emprunt': emprunt, 'accessoires': accessoires,
-                                                     'emprunt_accessoires': emprunt_accessoires})
+        emprunt_form = EmpruntForm(instance=emprunt)
+
+    accessoires = Accessoire.objects.filter(materiel=emprunt.materiel)
+
+    # Get initial states for accessories in this emprunt
+    initial_accessory_states = {}
+    for ea in emprunt_accessoires:
+        initial_accessory_states[ea.accessoire.id] = ea.accessoire.etat  # Correction ici
+
+    return render(request, 'modifier_emprunt.html', {
+        'form': emprunt_form,
+        'emprunt': emprunt,
+        'accessoires': accessoires,
+        'initial_accessory_states': initial_accessory_states,
+    })
 
 
 def modifier_accessoire(request, pk):

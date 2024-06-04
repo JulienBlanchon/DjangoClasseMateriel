@@ -9,7 +9,7 @@
     {% block content %}
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="mb-0">Liste des matériels</h2>
@@ -37,9 +37,9 @@
                                         <td>{{ materiel.budget }}</td>
                                         <td>{{ materiel.salle }}</td>
                                         <td>
-                                            <a href="{% url 'modifier_materiel' materiel.id %}" class="btn btn-primary btn-sm">Modifier</a>
-                                            <a href="{% url 'supprimer_materiel' materiel.id %}" class="btn btn-danger btn-sm">Supprimer</a>
-                                            <a href="{% url 'liste_emprunts_par_materiel' materiel.id %}" class="btn btn-secondary btn-sm">Voir les emprunts</a>
+                                            <a href="{% url 'modifier_materiel' materiel.id %}" class="btn btn-warning btn-sm mb-2">Modifier</a>
+                                            <a href="{% url 'supprimer_materiel' materiel.id %}" class="btn btn-danger btn-sm mb-2">Supprimer</a>
+                                            <a href="{% url 'liste_emprunts_par_materiel' materiel.id %}" class="btn btn-secondary btn-sm mb-2">Voir les emprunts</a>
                                         </td>
                                     </tr>
                                 {% empty %}

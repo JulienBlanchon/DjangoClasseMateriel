@@ -9,7 +9,7 @@
     {% block content %}
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="mb-0">Matériels dans la salle {{ salle.nom }}</h2>
@@ -22,7 +22,6 @@
                                     <th>Responsable</th>
                                     <th>Acheteur</th>
                                     <th>Budget</th>
-                                    <th>État</th>
                                     <th>Accessoires</th>
                                     <th>Actions</th>
                                 </tr>
@@ -34,7 +33,6 @@
                                         <td>{{ materiel.responsable }}</td>
                                         <td>{{ materiel.acheteur|default_if_none:"-" }}</td>
                                         <td>{{ materiel.budget }}</td>
-                                        <td>{{ materiel.get_etat_display }}</td>
                                         <td>
                                             <ul>
                                             {% for accessoire in materiel.materielaccessoire_set.all %}
@@ -43,7 +41,7 @@
                                             </ul>
                                         </td>
                                         <td>
-                                            <a href="{% url 'modifier_materiel' materiel.id %}" class="btn btn-primary btn-sm">Modifier</a>
+                                            <a href="{% url 'modifier_materiel' materiel.id %}" class="btn btn-warning btn-sm">Modifier</a>
                                             <a href="{% url 'supprimer_materiel' materiel.id %}" class="btn btn-danger btn-sm">Supprimer</a>
                                             <a href="{% url 'liste_emprunts_par_materiel' materiel.id %}" class="btn btn-secondary btn-sm">Voir les emprunts</a>
                                         </td>

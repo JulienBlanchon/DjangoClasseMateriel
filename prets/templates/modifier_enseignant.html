@@ -6,32 +6,69 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    {% block content %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="mb-0">Modifier l'enseignant</h2>
-                    </div>
-                    <div class="card-body">
-                        <form method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="{{ form.nom.id_for_label }}">Nom:</label>
-                                {{ form.nom }}
-                            </div>
-                            <div class="form-group">
-                                <label for="{{ form.prenom.id_for_label }}">Prénom:</label>
-                                {{ form.prenom }}
-                            </div>
-                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                        </form>
-                    </div>
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Modifier l'emprunt</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.materiel.id_for_label }}">Matériel:</label>
+                            {{ form.materiel }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.possesseur.id_for_label }}">Possesseur:</label>
+                            {{ form.possesseur }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.lieu.id_for_label }}">Lieu (Salle):</label>
+                            {{ form.lieu }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.occasion.id_for_label }}">Occasion:</label>
+                            {{ form.occasion }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.objectif_utilisation.id_for_label }}">Objectif d'utilisation:</label>
+                            {{ form.objectif_utilisation }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Accessoires:</label>
+                            {% for accessoire in accessoires %}
+                                <div class="form-check">
+                                    <input
+                                        type="checkbox"
+                                        name="accessoires"
+                                        value="{{ accessoire.id }}"
+                                        class="form-check-input"
+                                        id="accessoire-{{ accessoire.id }}"
+                                        {% if accessoire in emprunt_accessoires %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="accessoire-{{ accessoire.id }}">
+                                        {{ accessoire.nom }}
+                                    </label>
+                                    <select name="etat_{{ accessoire.id }}" class="form-control">
+                                        <option value="N" {% if accessoire.empruntaccessoire_set.filter(emprunt=emprunt).first.etat == 'N' %}selected{% endif %}>Neuf</option>
+                                        <option value="BE" {% if accessoire.empruntaccessoire_set.filter(emprunt=emprunt).first.etat == 'BE' %}selected{% endif %}>Bon état</option>
+                                        <option value="A" {% if accessoire.empruntaccessoire_set.filter(emprunt=emprunt).first.etat == 'A' %}selected{% endif %}>Abîmé</option>
+                                        <option value="TA" {% if accessoire.empruntaccessoire_set.filter(emprunt=emprunt).first.etat == 'TA' %}selected{% endif %}>Très abîmé</option>
+                                    </select>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
 </body>
 </html>

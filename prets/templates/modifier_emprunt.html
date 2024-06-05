@@ -30,6 +30,10 @@
                                 {{ form.lieu }}
                             </div>
                             <div class="form-group">
+                                <label for="{{ form.occasion.id_for_label }}">Occasion:</label>
+                                {{ form.occasion }}
+                            </div>
+                            <div class="form-group">
                                 <label for="{{ form.objectif_utilisation.id_for_label }}">Objectif d'utilisation:</label>
                                 {{ form.objectif_utilisation }}
                             </div>
@@ -41,6 +45,6 @@
             </div>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}
 </body>
 </html>

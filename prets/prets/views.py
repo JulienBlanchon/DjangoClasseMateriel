@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import (Enseignant, Salle, Materiel, Emprunt, Accessoire,
@@ -39,7 +40,7 @@ def liste_accessoires(request):
 
 def liste_materiels_par_salle(request, salle_id):
     salle = get_object_or_404(Salle, pk=salle_id)
-    materiels = Materiel.objects.filter(salle=salle)
+    materiels = salle.materiel_set.all()
     return render(request, 'liste_materiels_par_salle.html', {'salle': salle, 'materiels': materiels})
 
 
@@ -91,23 +92,45 @@ def ajouter_materiel(request):
         return render(request, 'ajouter_materiel.html', {'form': form, 'accessoires': accessoire})
 
 
+@transaction.atomic
 def ajouter_emprunt(request):
     if request.method == 'POST':
-        form = EmpruntForm(request.POST)
-        if form.is_valid():
-            emprunt = form.save()
+        emprunt_form = EmpruntForm(request.POST)
+
+        if emprunt_form.is_valid():
+            # Récupérer l'objet Salle à partir de l'ID de la salle
+            lieu_id = emprunt_form.cleaned_data['lieu'].id
+            salle = Salle.objects.get(pk=lieu_id)
+
+            emprunt = emprunt_form.save(commit=False)
+            materiel = emprunt.materiel
+
+            # Mettre à jour la salle du matériel avec l'objet Salle
+            materiel.salle = salle
+            materiel.save()
+            emprunt.save()  # Sauvegarder l'emprunt après avoir mis à jour le matériel
+
+            # Sauvegarde des accessoires empruntés
             accessoire_ids = request.POST.getlist('accessoires')
-            for accessoire_id in accessoire_ids:
+            etats_accessoires = request.POST.getlist('etat_accessoire')
+            for accessoire_id, etat in zip(accessoire_ids, etats_accessoires):
                 accessoire = get_object_or_404(Accessoire, pk=accessoire_id)
-                EmpruntAccessoire.objects.create(emprunt=emprunt, accessoire=accessoire, present=True)
+                EmpruntAccessoire.objects.create(
+                    emprunt=emprunt,
+                    accessoire=accessoire,
+                    present=True,
+                    etat=etat
+                )
+
             messages.success(request, "L'emprunt a été ajouté avec succès.")
             return redirect('liste_emprunts')
     else:
-        form = EmpruntForm()
-        salles = Salle.objects.all()
-        accessoires = Accessoire.objects.all() if not request.GET.get('materiel') else Accessoire.objects.filter(
-            materiel=request.GET.get('materiel'))
-    return render(request, 'ajouter_emprunt.html', {'form': form, 'accessoires': accessoires, 'salles': salles})
+        emprunt_form = EmpruntForm()
+
+    # Récupérer tous les accessoires pour les afficher dans le formulaire
+    accessoires = Accessoire.objects.all()
+
+    return render(request, 'ajouter_emprunt.html', {'form': emprunt_form, 'accessoires': accessoires})
 
 
 def ajouter_accessoire(request):
